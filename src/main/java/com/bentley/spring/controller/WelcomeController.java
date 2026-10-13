@@ -1,5 +1,10 @@
 package com.bentley.spring.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -7,6 +12,7 @@ import java.util.Properties;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,23 +31,9 @@ public class WelcomeController {
             throws InterruptedException, org.eclipse.paho.client.mqttv3.MqttException 
 	 {
         List<MqttSubscribeModel> messages = new ArrayList<>();
-//        String topic = "EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/#"; 
-//        
-//        CountDownLatch countDownLatch = new CountDownLatch(10);
-//        
-//        Mqtt.getInstance().subscribeWithResponse(topic, (s, mqttMessage) -> 
-//        {
-//            MqttSubscribeModel mqttSubscribeModel = new MqttSubscribeModel();
-//            mqttSubscribeModel.setId(mqttMessage.getId());
-//            mqttSubscribeModel.setMessage(new String(mqttMessage.getPayload()));
-//            mqttSubscribeModel.setQos(mqttMessage.getQos());
-//            messages.add(mqttSubscribeModel);
-//            countDownLatch.countDown();
-//        });
-//
-//        countDownLatch.await(1, TimeUnit.MILLISECONDS);
+
 		
-		System.out.println(" ======= Inside MQTT =====");
+		System.out.println(" ======= Inside Subscribe MQTT =====");
 		
 		String broker	= "ssl://mnp-con.core-odp10-preprod.eu.dp15.vwg-connect.com:8883";
 		
@@ -53,8 +45,19 @@ public class WelcomeController {
 		
 		try 
 		{
+			ClassPathResource resource = new ClassPathResource("truststore.jks");
+			
+			File trustStoreFile = File.createTempFile("truststore", ".jks");
+			
+			try (InputStream is = resource.getInputStream()) {
+	            Files.copy(is,
+	                    trustStoreFile.toPath(),
+	                    StandardCopyOption.REPLACE_EXISTING);
+	        }
+			System.out.println(" File path : "+trustStoreFile.getAbsolutePath());
+			 
 			Properties sslProps = new Properties();
-			sslProps.setProperty("com.ibm.ssl.trustStore", "C:/temp/cert/truststore.jks");
+			sslProps.setProperty("com.ibm.ssl.trustStore", trustStoreFile.getAbsolutePath());
 			sslProps.setProperty("com.ibm.ssl.trustStorePassword", "pass1234");
 			
 			
@@ -81,10 +84,9 @@ public class WelcomeController {
 			});
 			System.out.println("Subscribed to: " + topic);
 			
-		} catch (MqttException e) {
+		} catch (MqttException | IOException e) {
 			e.printStackTrace();
 		}	
-
         return messages;
     }
 }
