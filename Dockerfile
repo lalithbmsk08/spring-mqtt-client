@@ -1,4 +1,9 @@
 FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+COPY target/*.jar app.jar
+
 EXPOSE 8080 
-ADD target/spring-mqtt-client.jar spring-mqtt-client.jar
-CMD ["java", "-jar", "/spring-mqtt-client.jar"]
+
+ENTRYPOINT  ["java", "-jar", "/spring-mqtt-client.jar"]
