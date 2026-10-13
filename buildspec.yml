@@ -6,8 +6,8 @@ phases:
       - mvn clean install
       - echo Logging into Amazon ECR
       - aws --version
-      - REPOSITORY_URI=202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentley-mqtt-registry
-      - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - REPOSITORY_URI=202533503365.dkr.ecr.eu-west-2.amazonaws.com
+      - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 202533503365.dkr.ecr.eu-west-2.amazonaws.com
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -15,15 +15,14 @@ phases:
       - echo Build started on 'date'     
       - ls -la target
       - find target -name "*.jar"
-      - docker build -t $REPOSITORY_URI:latest .
+      - docker build -t bentley-mqtt-registry .
       - echo Building the Docker Image..
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag bentley-mqtt-registry:latest 202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentley-mqtt-registry:latest
   post_build:
     commands:
       - echo Build completed on 'date'
       - echo Pushing the Docker images..
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push 202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentley-mqtt-registry:latest
       - echo Writing image definitions file..
       - printf '[{"name":"spring-mqtt-client","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
