@@ -12,9 +12,11 @@ phases:
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - echo Build started on 'date'
-      - echo Building the Docker Image..
+      - echo Build started on 'date'     
+      - ls -la target
+      - find target -name "*.jar"
       - docker build -t $REPOSITORY_URI:latest .
+      - echo Building the Docker Image..
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
@@ -25,6 +27,7 @@ phases:
       - echo Writing image definitions file..
       - printf '[{"name":"spring-mqtt-client","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
+
 artifacts:
   files:
     - imagedefinitions.json
