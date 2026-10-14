@@ -15,14 +15,14 @@ phases:
       - echo Build started on 'date'     
       - ls -la target
       - find target -name "*.jar"
-      - docker build -t bentley-mqtt-registry .
+      - docker build -t bentely-mdk-mqtt-registry .
       - echo Building the Docker Image..
-      - docker tag bentley-mqtt-registry:latest 202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentley-mqtt-registry:latest
+      - docker tag bentely-mdk-mqtt-registry:latest 202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentely-mdk-mqtt-registry:latest
   post_build:
     commands:
       - echo Build completed on 'date'
       - echo Pushing the Docker images..
-      - docker push 202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentley-mqtt-registry:latest
+      - docker push 202533503365.dkr.ecr.eu-west-2.amazonaws.com/bentely-mdk-mqtt-registry
       - echo Writing image definitions file..
       - printf '[{"name":"spring-mqtt-client","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
