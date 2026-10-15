@@ -33,7 +33,7 @@ public class WelcomeController {
         List<MqttSubscribeModel> messages = new ArrayList<>();
 
 		
-		System.out.println(" ======= Inside Subscribe MQTT =====");
+		System.out.println(" ======= Inside Subscribe MQTT  1111 =====");
 		
 		String broker	= "ssl://mnp-con.core-odp10-preprod.eu.dp15.vwg-connect.com:8883";
 		
