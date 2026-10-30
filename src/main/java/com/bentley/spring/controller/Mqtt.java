@@ -33,11 +33,11 @@ public class Mqtt {
             options.setCleanSession(true);
             options.setSSLProperties(sslProps);
             
-            System.out.println("====== Before Connection =====");
+            System.out.println("====== Before Mqtt Connection =====");
             if (!instance.isConnected()) {
                 instance.connect(options);
             }
-            System.out.println("====== After Connection =====");
+            System.out.println("====== After Mqtt Connection =====");
         } catch (MqttException e) {
             e.printStackTrace();
         }

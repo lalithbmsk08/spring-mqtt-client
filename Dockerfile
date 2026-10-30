@@ -1,4 +1,9 @@
-FROM openjdk:8
-EXPOSE 8080
-ADD target/spring-mqtt-client.jar spring-mqtt-client.jar 
-ENTRYPOINT ["java", "-jar", "/spring-mqtt-client.jar"]
+FROM public.ecr.aws/amazoncorretto/amazoncorretto:17
+
+WORKDIR /app
+
+COPY target/*.jar spring-mqtt-client.jar
+
+EXPOSE 8080 
+
+ENTRYPOINT  ["java", "-jar", "spring-mqtt-client.jar"]
