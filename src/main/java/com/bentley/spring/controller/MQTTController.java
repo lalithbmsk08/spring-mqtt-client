@@ -39,12 +39,11 @@ public class MQTTController {
 	}
 	
 	@GetMapping("/testMessage")
-	public void testMessage() {
-		System.out.println(" ======= Test Post Call Mule =====");
-		
+	public String testMessage() {
+		System.out.println(" ======= Test Post Call Mule 1 =====");
 		String password = tokenService.getAccessToken();
-		
 		System.out.println(" Token ::"+password);
+		
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 		 		+ "<notification>\r\n"
 		 		+ "    <servicedata>\r\n"
@@ -63,16 +62,16 @@ public class MQTTController {
 	        
 		StringBuilder stb = new StringBuilder();
 		  stb.append("{");
-		  stb.append("\"topic:\"");
-		  stb.append("EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/SharedKeyAdded/default/");
-		  stb.append(",");
-		  stb.append("\"vin:\"");
+		  stb.append("\"topic\":\"");
+		  stb.append("EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/PairingPassword/default/jjoVCZ5glLPCYxlKk65nNaPWZS21");
+		  stb.append("\",");
+		  stb.append("\"vin\":\"");
 		  stb.append(parseXML(xml));
-		  stb.append("}");
+		  stb.append("\"}");
 		  
 		muleAPI.postMessage(stb.toString());		
 		System.out.println("*****************Test Message sent successfully *****************************");
-		
+		return "Successfully Tested";
 	}
 
 	@GetMapping("subscribe")
@@ -131,10 +130,10 @@ public class MQTTController {
 							  stb.append("{");
 							  stb.append("\"topic:\"");
 							  stb.append(topic);
-							  stb.append(",");
+							  stb.append("\",");
 							  stb.append("\"vin:\"");
 							  stb.append(parseXML(payload));
-							  stb.append("}");
+							  stb.append("\"}");
 							  
 				muleAPI.postMessage(stb.toString());
 				
