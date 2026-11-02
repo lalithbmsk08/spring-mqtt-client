@@ -47,8 +47,8 @@ public class ExternalAPI {
 		System.out.println("=======  Post:: ======"+postPayload);
 		WebClient webClient = WebClient.builder().build();
 		
-		String mulePath = "https://cariad-sys-api-dev-uwd9z4.abnaeh.gbr-e1.cloudhub.io";
-		
+		String mulePath = "https://cariad-sys-api-dev-uwd9z4.abnaeh.gbr-e1.cloudhub.io/api/mdk";
+		System.out.println("=======  Post Before Request ======");
         String response = webClient.post()
 					                .uri(mulePath)
 					                .header("client_id", "edb095193e694fdbbc155a3f827a4d3a")
