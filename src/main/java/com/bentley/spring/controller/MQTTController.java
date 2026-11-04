@@ -124,13 +124,12 @@ public class MQTTController {
 			{
 				System.out.println("*************** Subscrie Message ********************");
 				String payload = new String(message.getPayload());
-				System.out.println("*************** payload ********************");
+				System.out.println("*****************************************************");
 				
 				System.out.println("Topic   :" + receivedTopic);
 				System.out.println("Message :" + payload);
 				System.out.println("QoS     :" + message.getQos());
 
-				System.out.println("*************** Before String Builder ********************");
 				StringBuilder stb = new StringBuilder();
 							  stb.append("{");
 							  stb.append("\"topic:\"");
@@ -139,15 +138,14 @@ public class MQTTController {
 							  stb.append("\"vin:\"");
 							  stb.append(parseXML(payload));
 							  stb.append("\"}");
+				
 				System.out.println("*************** after String Builder ********************");
 				ExternalAPI extMuleAPI = new ExternalAPI();
-				System.out.println("*************** External Initial ********************");
 				extMuleAPI.postMessage(stb.toString());
-				System.out.println("*************** after External ********************");
+				System.out.println("*************** Post Mule API ********************");
 				
 			});
-			System.out.println("****************  Mule Post Sucessful********************");
-			
+			System.out.println("****************  Post MQTT Sucessful********************");
 		} catch (MqttException | IOException e) {
 			e.printStackTrace();
 		}	
