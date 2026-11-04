@@ -130,7 +130,7 @@ public class MQTTController {
 				System.out.println("Message :" + payload);
 				System.out.println("QoS     :" + message.getQos());
 
-				/*
+				System.out.println("*************** Before String Builder ********************");
 				StringBuilder stb = new StringBuilder();
 							  stb.append("{");
 							  stb.append("\"topic:\"");
@@ -139,9 +139,11 @@ public class MQTTController {
 							  stb.append("\"vin:\"");
 							  stb.append(parseXML(payload));
 							  stb.append("\"}");
-							  
-				muleAPI.postMessage(stb.toString());
-				*/
+				System.out.println("*************** after String Builder ********************");
+				ExternalAPI extMuleAPI = new ExternalAPI();
+				System.out.println("*************** External Initial ********************");
+				extMuleAPI.postMessage(stb.toString());
+				System.out.println("*************** after External ********************");
 				
 			});
 			System.out.println("****************  Mule Post Sucessful********************");
@@ -153,14 +155,20 @@ public class MQTTController {
         return messages;
     }
 	
-	public static String parseXML(String payload) {
-        Pattern pattern = Pattern.compile("<value>(.*?)</value>");
-        Matcher matcher = pattern.matcher(payload);
-        while (matcher.find()) {
-            System.out.println("VIN Name: " + matcher.group(1));
-            return matcher.group(1);
-        }
-        return null;
+	public static String parseXML(String payload) 
+	{
+        try {
+        	Pattern pattern = Pattern.compile("<value>(.*?)</value>");
+            Matcher matcher = pattern.matcher(payload);
+            while (matcher.find()) {
+                System.out.println("VIN Name: " + matcher.group(1));
+                return matcher.group(1);
+            }
+        } catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("parse Error ::"+e.getMessage());
+		}	
+        return "dummy";
 	}
 	
 }
