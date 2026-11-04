@@ -134,7 +134,7 @@ public class MQTTController {
 				StringBuilder stb = new StringBuilder();
 							  stb.append("{");
 							  stb.append("\"topic:\"");
-							  stb.append(topic);
+							  stb.append(receivedTopic);
 							  stb.append("\",");
 							  stb.append("\"vin:\"");
 							  stb.append(parseXML(payload));
