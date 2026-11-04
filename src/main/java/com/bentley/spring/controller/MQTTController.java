@@ -80,14 +80,15 @@ public class MQTTController {
 	 {
         List<MqttSubscribeModel> messages = new ArrayList<>();
 		
-		System.out.println(" ======= Sub MQTT Message Mule =====");
+		System.out.println(" ======= Sub MQTT Message Mule 10 =====");
 		
 		String broker	= "ssl://mnp-con.core-odp10-preprod.eu.dp15.vwg-connect.com:8883";
 		String clientId	= "mqttxsdf_56eb9a09234";
 		String topic	= "EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/#";
 		String username = "GAUTH";
-		String password = tokenService.getAccessToken();
-		
+		//String password = tokenService.getAccessToken();
+		String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NDM5MTY3NCwiaWF0IjoxNzkzNzg2ODc0LCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiI3YzlkOTY0OS1hOWNhLTQ0MDgtYTJkYy0zYzUwYWQ2M2Q4MjMiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.Ya11cF7jdc5kKqXFUTLhOZ5H1mMItVc1kdDUN9lJ7KW7-AQmkTvMrRtI8GnvTLDnl5FxqWa78hfsYTBwzP8STQ";
+		 
 		System.out.println(" Token ::"+password);
 		try 
 		{
@@ -110,6 +111,7 @@ public class MQTTController {
 				options.setUserName(username);
 				options.setPassword(password.toCharArray());
 				options.setCleanSession(false);
+			    options.setKeepAliveInterval(30);
 				options.setAutomaticReconnect(true);
 				options.setSSLProperties(sslProps);
 			
@@ -120,12 +122,15 @@ public class MQTTController {
 			System.out.println("*************** Mule Post ********************");
 			client.subscribe(topic, (receivedTopic, message) -> 
 			{
+				System.out.println("*************** Subscrie Message ********************");
 				String payload = new String(message.getPayload());
+				System.out.println("*************** payload ********************");
 				
 				System.out.println("Topic   :" + receivedTopic);
 				System.out.println("Message :" + payload);
 				System.out.println("QoS     :" + message.getQos());
-				
+
+				/*
 				StringBuilder stb = new StringBuilder();
 							  stb.append("{");
 							  stb.append("\"topic:\"");
@@ -136,7 +141,7 @@ public class MQTTController {
 							  stb.append("\"}");
 							  
 				muleAPI.postMessage(stb.toString());
-				
+				*/
 				
 			});
 			System.out.println("****************  Mule Post Sucessful********************");
