@@ -48,8 +48,7 @@ public class ExternalAPI {
 		WebClient webClient = WebClient.builder().build();
 		
 		String mulePath = "https://cariad-sys-api-dev-uwd9z4.abnaeh.gbr-e1.cloudhub.io/api/mdk";
-		System.out.println("=======  Post Before Request ======");
-        String response = webClient.post()
+		String response = webClient.post()
 					                .uri(mulePath)
 					                .header("client_id", "edb095193e694fdbbc155a3f827a4d3a")
 					                .header("client_secret", "270E8197719247bca55a7D8e652865Ad")
@@ -58,8 +57,8 @@ public class ExternalAPI {
 					                .retrieve()
 					                .bodyToMono(String.class)
 					                .block();
-        
-		System.out.println(" Response : "+response);
+        System.out.println(" Response :: "+response);
+		System.out.println("=======  Post After Request ======");
 	}
 
 }
