@@ -79,14 +79,14 @@ public class MQTTController {
             throws InterruptedException, org.eclipse.paho.client.mqttv3.MqttException 
 	 {
         List<MqttSubscribeModel> messages = new ArrayList<>();
-		System.out.println(" ======= Sub MQTT Message Mule 11 =====");
+		System.out.println(" ======= Sub MQTT Message Mule 12 =====");
 
 		 String broker	= "ssl://mnp-con.core-odp10-preprod.eu.dp15.vwg-connect.com:8883";
 		String clientId	= "mqttxsdf_56eb9a09234";
 		String topic	= "EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/#";
 		String username = "GAUTH";
-		String password = tokenService.getAccessToken();
-		//String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NDM5MTY3NCwiaWF0IjoxNzkzNzg2ODc0LCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiI3YzlkOTY0OS1hOWNhLTQ0MDgtYTJkYy0zYzUwYWQ2M2Q4MjMiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.Ya11cF7jdc5kKqXFUTLhOZ5H1mMItVc1kdDUN9lJ7KW7-AQmkTvMrRtI8GnvTLDnl5FxqWa78hfsYTBwzP8STQ";
+		//String password = tokenService.getAccessToken();
+		String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NTYyNjg5NywiaWF0IjoxNzk1MDIyMDk3LCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiJjYWVlZTNkNi0wNWRjLTQzOWItYWFkYS01NWQyMTUwN2NlZDIiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.k0aW4ORQdtCwKKojk0sW-Vw58hVHdX4wCZhPGl-fPLR-RRuDD_k4l60Pvkdv2but8unX5RAwrz92Nx28Is9XuQ";
 		 
 		System.out.println(" Token ::"+password);
 		try 
@@ -114,6 +114,7 @@ public class MQTTController {
 			System.out.println("==== b4 Connected to broker ====");
 			client.connect(options);
 			System.out.println("==== Af Connected to broker ====");
+			System.out.println("Client IsConnected ::" + client.isConnected());
 
 			System.out.println("*************** Mule Post ********************");
 			client.subscribe(topic, (receivedTopic, message) -> 
