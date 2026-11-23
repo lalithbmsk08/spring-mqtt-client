@@ -40,33 +40,41 @@ public class MQTTController {
 	
 	@GetMapping("/testMessage")
 	public String testMessage() {
-		System.out.println(" ======= Test Post Call Mule 1 =====");
+		System.out.println(" ======= Test Post Call Mule 2 =====");
+		
 		String password = tokenService.getAccessToken();
+		
 		System.out.println(" Token ::"+password);
 		
-		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-		 		+ "<notification>\r\n"
-		 		+ "    <servicedata>\r\n"
-		 		+ "        <fbdKeyValueNotificationServiceData>\r\n"
-		 		+ "            <parameter>\r\n"
-		 		+ "                <name>VIN</name>\r\n"
-		 		+ "                <value>SJAAD1Z76WC001211</value>\r\n"
-		 		+ "            </parameter>       \r\n"
-		 		+ "            <parameter>\r\n"
-		 		+ "                <name>FriendlyName</name>\r\n"
-		 		+ "                <value>FriendPixel10</value>\r\n"
-		 		+ "            </parameter>\r\n"
-		 		+ "      </fbdKeyValueNotificationServiceData>\r\n"
-		 		+ "    </servicedata>\r\n"
-		 		+ "</notification>";
-	        
+		String xml = """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <notification>
+                    <servicedata>
+                        <fbdKeyValueNotificationServiceData>
+                            <parameter>
+                                <name>VIN</name>
+                                <value>SJAAD1Z76WC001211</value>
+                            </parameter>
+                            <parameter>
+                                <name>PASSWORD</name>
+                                <value>14530308</value>
+                            </parameter>
+                            <parameter>
+                                <name>FriendlyName</name>
+                                <value>FriendPixel10</value>
+                            </parameter>
+                        </fbdKeyValueNotificationServiceData>
+                    </servicedata>
+                </notification>
+                """;
+
 		StringBuilder stb = new StringBuilder();
 		  stb.append("{");
 		  stb.append("\"topic\":\"");
 		  stb.append("EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/PairingPassword/default/jjoVCZ5glLPCYxlKk65nNaPWZS21");
 		  stb.append("\",");
-		  stb.append("\"vin\":\"");
-		  stb.append(parseXML(xml));
+		  stb.append("\"data\":");
+		  stb.append(extractParametersAsJson(xml));
 		  stb.append("\"}");
 		  
 		muleAPI.postMessage(stb.toString());		
@@ -86,7 +94,7 @@ public class MQTTController {
 		String topic	= "EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/#";
 		String username = "GAUTH";
 		//String password = tokenService.getAccessToken();
-		String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NTYyNjg5NywiaWF0IjoxNzk1MDIyMDk3LCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiJjYWVlZTNkNi0wNWRjLTQzOWItYWFkYS01NWQyMTUwN2NlZDIiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.k0aW4ORQdtCwKKojk0sW-Vw58hVHdX4wCZhPGl-fPLR-RRuDD_k4l60Pvkdv2but8unX5RAwrz92Nx28Is9XuQ";
+		String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NjA1ODEwMCwiaWF0IjoxNzk1NDUzMzAwLCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiI3ZmI4NWVhMC1jYzMwLTQ1OGEtYjUzOS1mODExMzNjYTRiNzAiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.jZUkmmNH4t9s-2PP7DF9tvjQoieLoFqud6IpFuXJqvXUEgIyeHLIFdBZs6JYY21jAPIBPiyG1VrBWcoK20F1tA";
 		 
 		System.out.println(" Token ::"+password);
 		try 
@@ -132,8 +140,8 @@ public class MQTTController {
 							  stb.append("\"topic\":\"");
 							  stb.append(receivedTopic);
 							  stb.append("\",");
-							  stb.append("\"vin\":\"");
-							  stb.append(parseXML(payload));
+							  stb.append("\"data\":");
+							  stb.append(extractParametersAsJson(payload));
 							  stb.append("\"}");
 				
 				System.out.println("*************** after String Builder ********************");
@@ -165,5 +173,31 @@ public class MQTTController {
 		}	
         return "dummy";
 	}
+
+	public static String extractParametersAsJson(String xml) throws Exception 
+	{
+		   var document = DocumentBuilderFactory.newInstance()
+		            .newDocumentBuilder()
+		            .parse(new InputSource(new StringReader(xml)));
+
+		    var parameters = document.getElementsByTagName("parameter");
+
+		    var jsonArray = IntStream.range(0, parameters.getLength())
+		            .mapToObj(i -> (Element) parameters.item(i))
+		            .map(parameter -> Map.of(
+		                    "name",
+		                    parameter.getElementsByTagName("name")
+		                            .item(0)
+		                            .getTextContent(),
+		                    "value",
+		                    parameter.getElementsByTagName("value")
+		                            .item(0)
+		                            .getTextContent()))
+		            .toList();
+		    return new ObjectMapper()
+		            .writerWithDefaultPrettyPrinter()
+		            .writeValueAsString(jsonArray);
+	}
+
 	
 }
