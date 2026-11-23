@@ -3,13 +3,16 @@ package com.bentley.spring.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -17,8 +20,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 import com.bentley.spring.model.MqttSubscribeModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -94,7 +100,7 @@ public class MQTTController {
 		String topic	= "EMAIL/223660/XID_BS_MDK2/Bentley/MDKv2/#";
 		String username = "GAUTH";
 		//String password = tokenService.getAccessToken();
-		String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NjA1ODEwMCwiaWF0IjoxNzk1NDUzMzAwLCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiI3ZmI4NWVhMC1jYzMwLTQ1OGEtYjUzOS1mODExMzNjYTRiNzAiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.jZUkmmNH4t9s-2PP7DF9tvjQoieLoFqud6IpFuXJqvXUEgIyeHLIFdBZs6JYY21jAPIBPiyG1VrBWcoK20F1tA";
+		String password = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjQwZDVmZmJjLTU1OTctMjIwYS0zOWY4LTUxMDI2MTI0MGE1ZCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXF0dCJdLCJjY2giOiJUSElSRF9QQVJUWSIsImNuZiI6eyJ4NWRuI3JmYzIyNTMiOiJTVD1DaGVzaGlyZSxMPUNyZXdlLENOPWFwaS10ZXN0LmJlbnRsZXltb3RvcnMuY29tLE89QmVudGxleSBNb3RvcnMgTGltaXRlZCxDPUdCIiwieDV0Ijoia0FRckRyWjhHWk1fM3ZWcWNnb1VnUEh3bEVFIn0sImV4cCI6MTc5NjA2MTAxMiwiaWF0IjoxNzk1NDU2MjEyLCJpc3MiOiJodHRwczovL2FwcC5lY2UuZ2F1dGgtdndhYy5jb20iLCJqdGkiOiIzNDQwN2M5Ni1lMDdiLTRjNzItYWYzZS1mNzg5OTU4NTcyOGQiLCJzY3AiOlsibXF0dCIsIm1ucCIsInQwX2Q6YmVudGxleW1kayJdLCJzdHlwIjoiVDAiLCJzeXMiOiJYSURfQkVOVExFWV9NVUxFU09GVCIsInRudCI6IkJlbnRsZXksRUNFIiwidHlwIjoiQVQiLCJ2ZXIiOiIxIn0.GG-OoJD9QnoEq5npux1ijPCnt8PgMR4S29GX8teu08rDhLTW3LCs2-lbQpOyPpBdcZFhUPUfXkGAvXI6HO2ldw";
 		 
 		System.out.println(" Token ::"+password);
 		try 
@@ -158,7 +164,7 @@ public class MQTTController {
         return messages;
     }
 	
-	public static String parseXML(String payload) 
+	/*public static String parseXML(String payload) 
 	{
         try {
         	Pattern pattern = Pattern.compile("<value>(.*?)</value>");
@@ -172,10 +178,12 @@ public class MQTTController {
 			System.out.println("parse Error ::"+e.getMessage());
 		}	
         return "dummy";
-	}
+	}*/
 
-	public static String extractParametersAsJson(String xml) throws Exception 
+	public static String extractParametersAsJson(String xml)
 	{
+		try 
+		{
 		   var document = DocumentBuilderFactory.newInstance()
 		            .newDocumentBuilder()
 		            .parse(new InputSource(new StringReader(xml)));
@@ -197,7 +205,8 @@ public class MQTTController {
 		    return new ObjectMapper()
 		            .writerWithDefaultPrettyPrinter()
 		            .writeValueAsString(jsonArray);
-	}
-
-	
+		}catch(Exception e) {
+			return null;
+		}
+	}	
 }
