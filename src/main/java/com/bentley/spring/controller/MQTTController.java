@@ -81,7 +81,7 @@ public class MQTTController {
 		  stb.append("\",");
 		  stb.append("\"data\":");
 		  stb.append(extractParametersAsJson(xml));
-		  stb.append("\"}");
+		  stb.append("}");
 		  
 		muleAPI.postMessage(stb.toString());		
 		System.out.println("*****************Test Message sent successfully *****************************");
@@ -148,7 +148,7 @@ public class MQTTController {
 							  stb.append("\",");
 							  stb.append("\"data\":");
 							  stb.append(extractParametersAsJson(payload));
-							  stb.append("\"}");
+							  stb.append("}");
 				
 				System.out.println("*************** after String Builder ********************");
 				ExternalAPI extMuleAPI = new ExternalAPI();
